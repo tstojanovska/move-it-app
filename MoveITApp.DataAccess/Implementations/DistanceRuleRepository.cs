@@ -36,7 +36,7 @@ namespace MoveITApp.DataAccess.Implementations
 
         public async Task<DistanceRule> GetDistanceRuleByRangeAsync(int distance)
         {
-            return await _moveItDbContext.DistanceRules.FirstOrDefaultAsync(x => x.From <= distance && (x.To == null || x.To >= distance));
+            return await _moveItDbContext.DistanceRules.FirstOrDefaultAsync(x => x.From <= distance && (x.To == null || x.To > distance));
         }
 
         public async Task UpdateAsync(DistanceRule entity)
