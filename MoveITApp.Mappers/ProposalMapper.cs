@@ -3,6 +3,9 @@ using MovieITApp.Dtos.Proposals;
 
 namespace MoveITApp.Mappers
 {
+    /// <summary>
+    /// Contains methods for mapping between Proposal domain objects and DTO-s
+    /// </summary>
     public static class ProposalMapper
     {
         public static Proposal ToProposal(this ProposalDto proposalDto)

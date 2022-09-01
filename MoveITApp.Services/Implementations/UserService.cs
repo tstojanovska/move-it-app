@@ -13,6 +13,9 @@ using XSystem.Security.Cryptography;
 
 namespace MoveITApp.Services.Implementations
 {
+    /// <summary>
+    /// Contains business logic for managing users
+    /// </summary>
     public class UserService : IUserService
     {
         private IUserRepository _userRepository;
@@ -24,6 +27,7 @@ namespace MoveITApp.Services.Implementations
             _options = options;
         }
 
+        /// <inheritdoc />
         public async Task<string> LoginUser(LoginUserDto loginDto)
         {
             if (string.IsNullOrEmpty(loginDto.UserName) || string.IsNullOrEmpty(loginDto.Password))
@@ -63,6 +67,7 @@ namespace MoveITApp.Services.Implementations
             return jwtSecurityTokenHandler.WriteToken(token);
         }
 
+        /// <inheritdoc />
         public async Task RegisterUser(RegisterUserDto registerUserDto)
         {
             await ValidateUser(registerUserDto);

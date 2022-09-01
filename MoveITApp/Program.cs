@@ -23,7 +23,7 @@ DependencyInjectionHelper.InjectRepositories(builder.Services);
 DependencyInjectionHelper.InjectServices(builder.Services);
 
 //Configure JWT
-//read from appSettings.json, find the section DbSettings 
+//read from appSettings.json, find the section AuthenticationSettings 
 var authenticationSettingsConfig = builder.Configuration.GetSection("AuthenticationSettings");
 builder.Services.Configure<AuthenticationSettings>(authenticationSettingsConfig);
 AuthenticationSettings authenticationSettings = authenticationSettingsConfig.Get<AuthenticationSettings>();
@@ -37,9 +37,7 @@ builder.Services.AddAuthentication(x =>
     .AddJwtBearer(x =>
     {
         x.RequireHttpsMetadata = false;
-        //we expect the token into the HttpContext
         x.SaveToken = true;
-        //how to validate token
         x.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateAudience = false,

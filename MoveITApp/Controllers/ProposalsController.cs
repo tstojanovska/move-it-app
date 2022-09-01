@@ -38,7 +38,7 @@ namespace MoveITApp.Controllers
                     if(string.IsNullOrEmpty(username))
                         return Unauthorized();
 
-                    var proposal = await _proposalService.GetProposal(initiateProposalDto, username);
+                    var proposal = await _proposalService.InitiateProposal(initiateProposalDto, username);
                     return StatusCode(StatusCodes.Status201Created, proposal);
 
                 }
@@ -54,6 +54,7 @@ namespace MoveITApp.Controllers
             }
             catch (Exception e)
             {
+                //logging can be added for the details of the exceptions
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred!");
             }
         }

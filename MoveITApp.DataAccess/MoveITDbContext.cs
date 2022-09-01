@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MoveITApp.Domain.Enums;
 using MoveITApp.Domain.Models;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MoveITApp.DataAccess
 {
@@ -21,6 +20,7 @@ namespace MoveITApp.DataAccess
         {
             base.OnModelCreating(modelBuilder);
 
+            //USER
             modelBuilder.Entity<User>()
                 .Property(x => x.Username)
                 .IsRequired();
@@ -28,6 +28,7 @@ namespace MoveITApp.DataAccess
                 .Property(x => x.Password)
                 .IsRequired();
 
+            //PROPOSAL
             modelBuilder.Entity<Proposal>()
                .Property(x => x.CalculatedPrice)
                .IsRequired();
@@ -44,6 +45,7 @@ namespace MoveITApp.DataAccess
                 .WithMany(x => x.Proposals)
                 .HasForeignKey(x => x.UserId);
 
+            //SEEDING INITIAL DATA
             modelBuilder.Entity<DistanceRule>()
                 .HasData(
                 new DistanceRule()
@@ -76,7 +78,7 @@ namespace MoveITApp.DataAccess
                .HasData(
                new MovingObjectRule()
                {
-                   Id =1,
+                   Id = 1,
                    MovingObjectType = MovingObjectType.Piano,
                    FixedPrice = 5000
                }

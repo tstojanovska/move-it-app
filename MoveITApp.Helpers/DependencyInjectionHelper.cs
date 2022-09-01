@@ -9,14 +9,26 @@ using MoveITApp.Services.Interfaces;
 
 namespace MoveITApp.Helpers
 {
+    /// <summary>
+    /// Class that contains methods for DI of the different dependencies in the application
+    /// </summary>
     public static class DependencyInjectionHelper
     {
+        /// <summary>
+        /// Injects db context
+        /// </summary>
+        /// <param name="services">Collection of app services</param>
+        /// <param name="connectionString">Database connection string</param>
         public static void InjectDbContext(IServiceCollection services, string connectionString)
         {
             services.AddDbContext<MoveITDbContext>(x =>
             x.UseSqlServer(connectionString));
         }
 
+        /// <summary>
+        /// Injects repositories
+        /// </summary>
+        /// <param name="services">Collection of app services</param>
         public static void InjectRepositories(IServiceCollection services)
         {
             services.AddTransient<IRepository<Proposal>, ProposalRepository>();
@@ -25,6 +37,10 @@ namespace MoveITApp.Helpers
             services.AddTransient<IMovingObjectRuleRepository, MovingObjectRuleRepository>();
         }
 
+        /// <summary>
+        /// Injects services
+        /// </summary>
+        /// <param name="services">Collection of app services</param>
         public static void InjectServices(IServiceCollection services)
         {
             services.AddTransient<IProposalService, ProposalService>();

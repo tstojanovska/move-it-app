@@ -9,6 +9,9 @@ using MovieITApp.Dtos.Proposals;
 
 namespace MoveITApp.Services.Implementations
 {
+    /// <summary>
+    /// Class that contains business logic for managing Proposals
+    /// </summary>
     public class ProposalService : IProposalService
     {
         private readonly IDistanceRuleRepository _distanceRuleRepository;
@@ -27,7 +30,8 @@ namespace MoveITApp.Services.Implementations
             _proposalRepository = proposalRepository;
         }
 
-        public async Task<ProposalDto> GetProposal(InitiateProposalDto initiateProposalDto, string username)
+        /// <inheritdoc />
+        public async Task<ProposalDto> InitiateProposal(InitiateProposalDto initiateProposalDto, string username)
         {
             ValidateProposalInformation(initiateProposalDto);
             var userDb = await _userRepository.GetUserByUsernameAsync(username);
@@ -59,6 +63,11 @@ namespace MoveITApp.Services.Implementations
             return proposalDto;
         }
 
+        /// <summary>
+        /// Calculates price for moving a given volume (attic and living)
+        /// </summary>
+        /// <param name="initiateProposalDto">Data needed for making a proposal</param>
+        /// <param name="distancePrice">Price needed for one car to cover the given distance</param>
         private async Task<int> CalculateVolumePrice(InitiateProposalDto initiateProposalDto, int distancePrice)
         {
             var price = 0;
@@ -84,6 +93,11 @@ namespace MoveITApp.Services.Implementations
             return price;
         }
 
+        /// <summary>
+        /// Validates proposal data
+        /// </summary>
+        /// <param name="initiateProposalDto">Data needed for making a proposal</param>
+        /// <exception cref="BadDataException"></exception>
         private void ValidateProposalInformation(InitiateProposalDto initiateProposalDto)
         {
             if (initiateProposalDto.Distance <= 0)
