@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using MoveITApp.DataAccess;
 using MoveITApp.DataAccess.Implementations;
 using MoveITApp.DataAccess.Interfaces;
-using MoveITApp.Domain.Models;
 using MoveITApp.Services.Implementations;
 using MoveITApp.Services.Interfaces;
 
@@ -31,7 +30,7 @@ namespace MoveITApp.Helpers
         /// <param name="services">Collection of app services</param>
         public static void InjectRepositories(IServiceCollection services)
         {
-            services.AddTransient<IRepository<Proposal>, ProposalRepository>();
+            services.AddTransient<IProposalRepository, ProposalRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IDistanceRuleRepository, DistanceRuleRepository>();
             services.AddTransient<IMovingObjectRuleRepository, MovingObjectRuleRepository>();

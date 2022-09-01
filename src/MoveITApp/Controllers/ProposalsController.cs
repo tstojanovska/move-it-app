@@ -58,5 +58,40 @@ namespace MoveITApp.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred!");
             }
         }
+
+        [Authorize]
+        [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<List<ProposalDto>>> Get()
+        {
+            try
+            {
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                if (identity != null)
+                {
+                    IEnumerable<Claim> claims = identity.Claims;
+                    var username = claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value.ToString();
+
+                    if (string.IsNullOrEmpty(username))
+                        return Unauthorized();
+
+                    var proposals = await _proposalService.GetUserProposals(username);
+                    return Ok(proposals);
+
+                }
+                return Unauthorized();
+            }
+            catch (UserNotFoundException e)
+            {
+                return Unauthorized();
+            }
+            catch (Exception e)
+            {
+                //logging can be added for the details of the exceptions
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred!");
+            }
+        }
     }
 }

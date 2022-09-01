@@ -17,17 +17,30 @@ namespace MoveITApp.Services.Implementations
         private readonly IDistanceRuleRepository _distanceRuleRepository;
         private readonly IMovingObjectRuleRepository _movingObjectRuleRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IRepository<Proposal> _proposalRepository;
+        private readonly IProposalRepository _proposalRepository;
         private IOptions<AppSettings> _options;
 
         public ProposalService(IDistanceRuleRepository distanceRuleRepository, IMovingObjectRuleRepository movingObjectRuleRepository, 
-            IOptions<AppSettings> options, IUserRepository userRepository, IRepository<Proposal> proposalRepository)
+            IOptions<AppSettings> options, IUserRepository userRepository, IProposalRepository proposalRepository)
         {
             _distanceRuleRepository = distanceRuleRepository;
             _movingObjectRuleRepository = movingObjectRuleRepository;
             _options = options;
             _userRepository = userRepository;
             _proposalRepository = proposalRepository;
+        }
+
+        /// <inheritdoc />
+        public async Task<List<ProposalDto>> GetUserProposals(string username)
+        {
+            var userDb = await _userRepository.GetUserByUsernameAsync(username);
+            if (userDb == null)
+            {
+                throw new UserNotFoundException();
+            }
+
+            var userProposalsDb = await _proposalRepository.GetUserProposalsAsync(userDb.Id);
+            return userProposalsDb.Select(x => x.ToProposalDto()).ToList();
         }
 
         /// <inheritdoc />
@@ -74,14 +87,14 @@ namespace MoveITApp.Services.Implementations
 
             if (initiateProposalDto.LivingAreaVolume > 0)
             {
-                var numberOfCars = initiateProposalDto.LivingAreaVolume % _options.Value.ExtraCarLimit + 1;
+                var numberOfCars = (initiateProposalDto.LivingAreaVolume % _options.Value.ExtraCarLimit) + 1;
                 price += numberOfCars * distancePrice;
             }
 
             //add comment why
             if (initiateProposalDto.AtticAreaVolume > 0)
             {
-                var numberOfCars = initiateProposalDto.AtticAreaVolume % _options.Value.ExtraCarLimit + 1;
+                var numberOfCars = (initiateProposalDto.AtticAreaVolume % _options.Value.ExtraCarLimit) + 1;
                 price += numberOfCars * distancePrice;
             }
 

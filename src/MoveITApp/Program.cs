@@ -47,6 +47,9 @@ builder.Services.AddAuthentication(x =>
         };
     });
 
+var appSettingsConfig = builder.Configuration.GetSection("AppSettings");
+builder.Services.Configure<AppSettings>(appSettingsConfig);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

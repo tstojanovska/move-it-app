@@ -7,7 +7,7 @@ namespace MoveITApp.DataAccess.Implementations
     /// <summary>
     /// Contains methods for managing data access for Proposals 
     /// </summary>
-    public class ProposalRepository : IRepository<Proposal>
+    public class ProposalRepository : IProposalRepository
     {
         private MoveITDbContext _moveItDbContext;
 
@@ -40,6 +40,12 @@ namespace MoveITApp.DataAccess.Implementations
         public async Task<Proposal> GetByIdAsync(int id)
         {
             return await _moveItDbContext.Proposals.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        /// <inheritdoc />
+        public async Task<List<Proposal>> GetUserProposalsAsync(int userId)
+        {
+            return await _moveItDbContext.Proposals.Where(x => x.UserId == userId).ToListAsync();
         }
 
         /// <inheritdoc />

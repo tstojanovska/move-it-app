@@ -20,5 +20,18 @@ namespace MoveITApp.Mappers
                 UserId = proposalDto.UserId
             };
         }
+
+        public static ProposalDto ToProposalDto(this Proposal proposal)
+        {
+            return new ProposalDto
+            {
+                AtticAreaVolume = proposal.AtticAreaVolume,
+                CalculatedPrice = proposal.CalculatedPrice,
+                Distance = proposal.Distance,
+                LivingAreaVolume = proposal.LivingAreaVolume,
+                MovingObjectType = proposal.MovingObjectType,
+                UserId = proposal.UserId
+            };
+        }
     }
 }
