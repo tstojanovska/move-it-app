@@ -71,6 +71,16 @@ namespace MoveITApp.Tests
             Assert.Equal(7200, result.CalculatedPrice);
 
             VerifyGetUserByUserNameWasCalledOnce();
+            VerifyGetDistanceRuleWasCalledOnce();
+            VerifyGetMovingObjectRuleWasCalledOnce();
+        }
+
+        [Fact]
+        public void GetUserProposals_should_throw_exception()
+        {
+            SetupGetUserByUsernameToReturnNull();
+            Assert.ThrowsAsync<UserNotFoundException>(() => _proposalService.GetUserProposalsAsync("tstojanovska"));
+            VerifyGetUserByUserNameWasCalledOnce();
         }
 
 
@@ -107,6 +117,10 @@ namespace MoveITApp.Tests
         });
         private void VerifyGetUserByUserNameWasCalledOnce() => _userRepositoryMock.Verify(x =>
         x.GetUserByUsernameAsync(It.IsAny<string>()), Times.Once);
-      
+        private void VerifyGetDistanceRuleWasCalledOnce() => _distanceRuleRepositoryMock.Verify(x =>
+        x.GetDistanceRuleByRangeAsync(It.IsAny<int>()), Times.Once);
+        private void VerifyGetMovingObjectRuleWasCalledOnce() => _movingObjectRepositoryMock.Verify(x =>
+        x.GetMovingObjectRuleByTypeAsync(It.IsAny<MovingObjectType>()), Times.Once);
+
     }
 }
