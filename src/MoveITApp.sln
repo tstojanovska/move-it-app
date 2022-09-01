@@ -3,21 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoveITApp", "MoveITApp\MoveITApp.csproj", "{1BA06F7A-484E-4287-9B13-8C55083BC657}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoveITApp", "MoveITApp\MoveITApp.csproj", "{1BA06F7A-484E-4287-9B13-8C55083BC657}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoveITApp.Domain", "MoveITApp.Domain\MoveITApp.Domain.csproj", "{E18416E8-5F6F-402D-A023-F01D9CE1948A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoveITApp.Domain", "MoveITApp.Domain\MoveITApp.Domain.csproj", "{E18416E8-5F6F-402D-A023-F01D9CE1948A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoveITApp.DataAccess", "MoveITApp.DataAccess\MoveITApp.DataAccess.csproj", "{E3D9EFD3-2001-4E2C-A88D-662E772B1C5F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoveITApp.DataAccess", "MoveITApp.DataAccess\MoveITApp.DataAccess.csproj", "{E3D9EFD3-2001-4E2C-A88D-662E772B1C5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoveITApp.Services", "MoveITApp.Services\MoveITApp.Services.csproj", "{03CDFAE1-A862-47D9-95AF-298457D10FBE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoveITApp.Services", "MoveITApp.Services\MoveITApp.Services.csproj", "{03CDFAE1-A862-47D9-95AF-298457D10FBE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoveITApp.Mappers", "MoveITApp.Mappers\MoveITApp.Mappers.csproj", "{35A2E611-B8B4-4709-973E-86897F268274}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoveITApp.Mappers", "MoveITApp.Mappers\MoveITApp.Mappers.csproj", "{35A2E611-B8B4-4709-973E-86897F268274}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoveITApp.Helpers", "MoveITApp.Helpers\MoveITApp.Helpers.csproj", "{EA360A44-475B-43ED-B061-10DE2156A454}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoveITApp.Helpers", "MoveITApp.Helpers\MoveITApp.Helpers.csproj", "{EA360A44-475B-43ED-B061-10DE2156A454}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoveITApp.Shared", "MoveITApp.Shared\MoveITApp.Shared.csproj", "{2D967E9E-CF5F-45A1-AC38-0FBA67AA91D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoveITApp.Shared", "MoveITApp.Shared\MoveITApp.Shared.csproj", "{2D967E9E-CF5F-45A1-AC38-0FBA67AA91D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieITApp.Dtos", "MovieITApp.Dtos\MovieITApp.Dtos.csproj", "{C7506FC5-8D3B-47FB-BE27-365E87863342}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieITApp.Dtos", "MovieITApp.Dtos\MovieITApp.Dtos.csproj", "{C7506FC5-8D3B-47FB-BE27-365E87863342}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoveITApp.Tests", "MoveITApp.Tests\MoveITApp.Tests.csproj", "{618182E7-8A3E-442C-BEA1-749A04E5AB1E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{C7506FC5-8D3B-47FB-BE27-365E87863342}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7506FC5-8D3B-47FB-BE27-365E87863342}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7506FC5-8D3B-47FB-BE27-365E87863342}.Release|Any CPU.Build.0 = Release|Any CPU
+		{618182E7-8A3E-442C-BEA1-749A04E5AB1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{618182E7-8A3E-442C-BEA1-749A04E5AB1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{618182E7-8A3E-442C-BEA1-749A04E5AB1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{618182E7-8A3E-442C-BEA1-749A04E5AB1E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
