@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
 using MoveITApp.DataAccess.Interfaces;
-using MoveITApp.Domain.Models;
 using MoveITApp.Mappers;
 using MoveITApp.Services.Interfaces;
 using MoveITApp.Shared.AppSettings;

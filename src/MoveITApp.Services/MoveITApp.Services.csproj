@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MoveITApp.DataAccess\MoveITApp.DataAccess.csproj" />
+    <ProjectReference Include="..\MoveITApp.Helpers\MoveITApp.Helpers.csproj" />
     <ProjectReference Include="..\MoveITApp.Mappers\MoveITApp.Mappers.csproj" />
     <ProjectReference Include="..\MoveITApp.Shared\MoveITApp.Shared.csproj" />
     <ProjectReference Include="..\MovieITApp.Dtos\MovieITApp.Dtos.csproj" />

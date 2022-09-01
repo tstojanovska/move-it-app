@@ -1,12 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using MoveITApp.DataAccess;
 using MoveITApp.DataAccess.Implementations;
 using MoveITApp.DataAccess.Interfaces;
 using MoveITApp.Services.Implementations;
 using MoveITApp.Services.Interfaces;
 
-namespace MoveITApp.Helpers
+namespace MoveITApp
 {
     /// <summary>
     /// Class that contains methods for DI of the different dependencies in the application

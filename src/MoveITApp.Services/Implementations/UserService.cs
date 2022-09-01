@@ -2,6 +2,8 @@
 using Microsoft.IdentityModel.Tokens;
 using MoveITApp.DataAccess.Interfaces;
 using MoveITApp.Domain.Models;
+using MoveITApp.Helpers;
+using MoveITApp.Mappers;
 using MoveITApp.Services.Interfaces;
 using MoveITApp.Shared.AppSettings;
 using MoveITApp.Shared.CustomExceptions;
@@ -9,7 +11,6 @@ using MovieITApp.Dtos.Users;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using XSystem.Security.Cryptography;
 
 namespace MoveITApp.Services.Implementations
 {
@@ -35,11 +36,7 @@ namespace MoveITApp.Services.Implementations
                 throw new BadDataException("Username and password are required fields!");
             }
 
-            MD5CryptoServiceProvider mD5CryptoServiceProvider = new MD5CryptoServiceProvider();
-            byte[] passwordBytes = Encoding.ASCII.GetBytes(loginDto.Password);
-            byte[] hashBytes = mD5CryptoServiceProvider.ComputeHash(passwordBytes);
-            string hash = Encoding.ASCII.GetString(hashBytes);
-
+            var hash = DataSecurityHelper.GenerateHash(loginDto.Password);
             User userDb = await _userRepository.LoginUserAsync(loginDto.UserName, hash);
             if (userDb == null)
             {
@@ -72,18 +69,9 @@ namespace MoveITApp.Services.Implementations
         {
             await ValidateUser(registerUserDto);
 
-            MD5CryptoServiceProvider mD5CryptoServiceProvider = new MD5CryptoServiceProvider();
-            byte[] passwordBytes = Encoding.ASCII.GetBytes(registerUserDto.Password);
-            byte[] hashBytes = mD5CryptoServiceProvider.ComputeHash(passwordBytes);
-            string hash = Encoding.ASCII.GetString(hashBytes);
+            var hash = DataSecurityHelper.GenerateHash(registerUserDto.Password);
 
-            User user = new User
-            {
-                FirstName = registerUserDto.FirstName,
-                LastName = registerUserDto.LastName,
-                Username = registerUserDto.Username,
-                Password = hash
-            };
+            User user = registerUserDto.ToUser(hash);
             await _userRepository.AddAsync(user);
         }
 

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using MoveITApp.Helpers;
+using MoveITApp;
 using MoveITApp.Shared.AppSettings;
 using System.Text;
 
