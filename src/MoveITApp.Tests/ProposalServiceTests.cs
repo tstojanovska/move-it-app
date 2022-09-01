@@ -83,6 +83,19 @@ namespace MoveITApp.Tests
             VerifyGetUserByUserNameWasCalledOnce();
         }
 
+        [Fact]
+        public async Task GetUserProposals_should_return_result()
+        {
+            SetupGetUserProposals();
+            SetupGetUserByUsernameToReturnUser();
+            var result = await _proposalService.GetUserProposalsAsync("tstojanovska");
+
+            Assert.NotNull(result);
+            Assert.Equal(2, result.Count);
+            Assert.IsType<ProposalDto>(result.First());
+            VerifyGetUserByUserNameWasCalledOnce();
+        }
+
 
         private void SetupGetUserByUsernameToReturnNull() => _userRepositoryMock.Setup(x =>
         x.GetUserByUsernameAsync(It.IsAny<string>()))
@@ -107,6 +120,29 @@ namespace MoveITApp.Tests
             To = 100,
             Id =1
         });
+        private void SetupGetUserProposals() => _proposalRepositoryMock.Setup(x =>
+        x.GetUserProposalsAsync(It.IsAny<int>()))
+        .ReturnsAsync(new List<Proposal>
+        {
+            new Proposal
+            {
+                Id = 1,
+                AtticAreaVolume =10,
+                Distance = 10,
+                LivingAreaVolume = 30,
+                MovingObjectType = MovingObjectType.Piano,
+                CalculatedPrice = 7200
+            },
+            new Proposal
+            {
+                Id = 2,
+                AtticAreaVolume =10,
+                Distance = 10,
+                LivingAreaVolume = 30,
+                MovingObjectType = null,
+                CalculatedPrice = 2200
+            }
+        });
         private void SetupGetObjectMovingRule(MovingObjectType movingObjectType, int fixedPrice) => _movingObjectRepositoryMock.Setup(x =>
         x.GetMovingObjectRuleByTypeAsync(It.IsAny<MovingObjectType>()))
         .ReturnsAsync(new MovingObjectRule
@@ -121,6 +157,8 @@ namespace MoveITApp.Tests
         x.GetDistanceRuleByRangeAsync(It.IsAny<int>()), Times.Once);
         private void VerifyGetMovingObjectRuleWasCalledOnce() => _movingObjectRepositoryMock.Verify(x =>
         x.GetMovingObjectRuleByTypeAsync(It.IsAny<MovingObjectType>()), Times.Once);
+        private void VerifyGetUserProposalsWasCalledOnce() => _proposalRepositoryMock.Verify(x =>
+        x.GetUserProposalsAsync(It.IsAny<int>()), Times.Once);
 
     }
 }
