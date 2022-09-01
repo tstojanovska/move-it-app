@@ -42,7 +42,7 @@ namespace MoveITApp.Tests
         public void Initiate_proposal_should_throw_exception()
         {
             SetupGetUserByUsernameToReturnNull();
-            Assert.ThrowsAsync<UserNotFoundException>(() => _proposalService.InitiateProposalAsync(new InitiateProposalDto
+            Assert.ThrowsAsync<InvalidUserException>(() => _proposalService.InitiateProposalAsync(new InitiateProposalDto
             {
                 AtticAreaVolume =10,
                 Distance = 10,
@@ -52,8 +52,10 @@ namespace MoveITApp.Tests
             VerifyGetUserByUserNameWasCalledOnce();
         }
 
-        [Fact]
-        public async Task Initiate_proposal_should_return_result()
+        [Theory]
+        [InlineData(10, 20, 30, 7200, MovingObjectType.Piano)]
+        [InlineData(10, 20, 30, 2200, null)]
+        public async Task Initiate_proposal_should_return_result(int distance, int lArea, int aArea, int calculatedPrice, MovingObjectType? type)
         {
             SetupGetUserByUsernameToReturnUser();
             SetupGetDistanceRule(1000, 10);
@@ -61,25 +63,32 @@ namespace MoveITApp.Tests
 
             var result = await _proposalService.InitiateProposalAsync(new InitiateProposalDto
             {
-                AtticAreaVolume = 30,
-                Distance = 10,
-                LivingAreaVolume = 20,
-                MovingObjectType = MovingObjectType.Piano
+                AtticAreaVolume = aArea,
+                Distance = distance,
+                LivingAreaVolume = lArea,
+                MovingObjectType = type
             }, "tstojanovska");
 
             Assert.NotNull(result);
-            Assert.Equal(7200, result.CalculatedPrice);
+            Assert.Equal(calculatedPrice, result.CalculatedPrice);
 
             VerifyGetUserByUserNameWasCalledOnce();
             VerifyGetDistanceRuleWasCalledOnce();
-            VerifyGetMovingObjectRuleWasCalledOnce();
+            if (type.HasValue)
+            {
+                VerifyGetMovingObjectRuleWasCalledTimes(Times.Once());
+            }
+            else
+            {
+                VerifyGetMovingObjectRuleWasCalledTimes(Times.Never());
+            }
         }
 
         [Fact]
         public void GetUserProposals_should_throw_exception()
         {
             SetupGetUserByUsernameToReturnNull();
-            Assert.ThrowsAsync<UserNotFoundException>(() => _proposalService.GetUserProposalsAsync("tstojanovska"));
+            Assert.ThrowsAsync<InvalidUserException>(() => _proposalService.GetUserProposalsAsync("tstojanovska"));
             VerifyGetUserByUserNameWasCalledOnce();
         }
 
@@ -96,6 +105,26 @@ namespace MoveITApp.Tests
             VerifyGetUserByUserNameWasCalledOnce();
         }
 
+        [Fact]
+        public void GetUserProposalDetails_should_throw_not_found_exception()
+        {
+            SetupGetUserByUsernameToReturnUser();
+            SetupGetProposalByIdToReturnNull();
+            Assert.ThrowsAsync<ResourceNotFoundException>(() => _proposalService.GetUserProposalDetailsAsync(1,"tstojanovska"));
+            VerifyGetUserByUserNameWasCalledOnce();
+            VerifyGetProposalByIdWasCalledOnce();
+        }
+
+        [Fact]
+        public void GetUserProposalDetails_should_throw_invalid_user_exception()
+        {
+            SetupGetUserByUsernameToReturnUser();
+            SetupGetProposalByIdToReturnProposal(2);
+            Assert.ThrowsAsync<InvalidUserException>(() => _proposalService.GetUserProposalDetailsAsync(1, "tstojanovska"));
+            VerifyGetUserByUserNameWasCalledOnce();
+            VerifyGetProposalByIdWasCalledOnce();
+        }
+
 
         private void SetupGetUserByUsernameToReturnNull() => _userRepositoryMock.Setup(x =>
         x.GetUserByUsernameAsync(It.IsAny<string>()))
@@ -109,6 +138,21 @@ namespace MoveITApp.Tests
             LastName  = "Stojanovska",
             Username = "tstojanovska",
             Password = "Test123"
+        });
+        private void SetupGetProposalByIdToReturnNull() => _proposalRepositoryMock.Setup(x =>
+        x.GetByIdAsync(It.IsAny<int>()))
+        .ReturnsAsync(null as Proposal);
+        private void SetupGetProposalByIdToReturnProposal(int id) => _proposalRepositoryMock.Setup(x =>
+        x.GetByIdAsync(It.IsAny<int>()))
+        .ReturnsAsync(new Proposal
+        {
+            Id = id,
+            AtticAreaVolume = 10,
+            Distance = 10,
+            LivingAreaVolume = 30,
+            MovingObjectType = MovingObjectType.Piano,
+            CalculatedPrice = 7200
+
         });
         private void SetupGetDistanceRule(int fixedPrice, int pricePerKm) => _distanceRuleRepositoryMock.Setup(x =>
         x.GetDistanceRuleByRangeAsync(It.IsAny<int>()))
@@ -155,10 +199,12 @@ namespace MoveITApp.Tests
         x.GetUserByUsernameAsync(It.IsAny<string>()), Times.Once);
         private void VerifyGetDistanceRuleWasCalledOnce() => _distanceRuleRepositoryMock.Verify(x =>
         x.GetDistanceRuleByRangeAsync(It.IsAny<int>()), Times.Once);
-        private void VerifyGetMovingObjectRuleWasCalledOnce() => _movingObjectRepositoryMock.Verify(x =>
-        x.GetMovingObjectRuleByTypeAsync(It.IsAny<MovingObjectType>()), Times.Once);
+        private void VerifyGetMovingObjectRuleWasCalledTimes(Times times) => _movingObjectRepositoryMock.Verify(x =>
+        x.GetMovingObjectRuleByTypeAsync(It.IsAny<MovingObjectType>()), times);
         private void VerifyGetUserProposalsWasCalledOnce() => _proposalRepositoryMock.Verify(x =>
         x.GetUserProposalsAsync(It.IsAny<int>()), Times.Once);
+        private void VerifyGetProposalByIdWasCalledOnce() => _proposalRepositoryMock.Verify(x =>
+        x.GetByIdAsync(It.IsAny<int>()), Times.Once);
 
     }
 }

@@ -30,12 +30,34 @@ namespace MoveITApp.Services.Implementations
         }
 
         /// <inheritdoc />
+        public async Task<ProposalDto> GetUserProposalDetailsAsync(int id, string username)
+        {
+            var userDb = await _userRepository.GetUserByUsernameAsync(username);
+            if (userDb == null)
+            {
+                throw new InvalidUserException();
+            }
+
+            var proposalDb = await _proposalRepository.GetByIdAsync(id);
+            if(proposalDb == null)
+            {
+                throw new ResourceNotFoundException($"Proposal with id {id} was not found");
+            }
+
+            if(proposalDb.UserId != userDb.Id)
+            {
+                throw new InvalidUserException();
+            }
+            return proposalDb.ToProposalDto();
+        }
+
+        /// <inheritdoc />
         public async Task<List<ProposalDto>> GetUserProposalsAsync(string username)
         {
             var userDb = await _userRepository.GetUserByUsernameAsync(username);
             if (userDb == null)
             {
-                throw new UserNotFoundException();
+                throw new InvalidUserException();
             }
 
             var userProposalsDb = await _proposalRepository.GetUserProposalsAsync(userDb.Id);
@@ -49,7 +71,7 @@ namespace MoveITApp.Services.Implementations
             var userDb = await _userRepository.GetUserByUsernameAsync(username);
             if (userDb == null)
             {
-                throw new UserNotFoundException();
+                throw new InvalidUserException();
             }
 
             var distanceRule = await _distanceRuleRepository.GetDistanceRuleByRangeAsync(initiateProposalDto.Distance);

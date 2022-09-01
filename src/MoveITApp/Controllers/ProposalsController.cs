@@ -48,7 +48,7 @@ namespace MoveITApp.Controllers
             {
                 return BadRequest(e.Message);
             }
-            catch (UserNotFoundException e)
+            catch (InvalidUserException e)
             {
                 return Unauthorized();
             }
@@ -83,9 +83,54 @@ namespace MoveITApp.Controllers
                 }
                 return Unauthorized();
             }
-            catch (UserNotFoundException e)
+            catch (InvalidUserException e)
             {
                 return Unauthorized();
+            }
+            catch (Exception e)
+            {
+                //logging can be added for the details of the exceptions
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred!");
+            }
+        }
+
+        [Authorize]
+        [HttpGet("details/{id}")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<ProposalDto>> GetById(int id)
+        {
+            try
+            {
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                if (identity != null)
+                {
+                    IEnumerable<Claim> claims = identity.Claims;
+                    var username = claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value.ToString();
+
+                    if (string.IsNullOrEmpty(username))
+                        return Unauthorized();
+
+                    var proposal = await _proposalService.GetUserProposalDetailsAsync(id, username);
+                    return Ok(proposal);
+
+                }
+                return Unauthorized();
+            }
+            catch (InvalidUserException e)
+            {
+                return Unauthorized();
+            }
+            catch (BadDataException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (ResourceNotFoundException e)
+            {
+                return NotFound();
             }
             catch (Exception e)
             {

@@ -15,5 +15,11 @@ namespace MoveITApp.Services.Interfaces
         /// </summary>
         /// <param name="username">User username</param>
         Task<List<ProposalDto>> GetUserProposalsAsync(string username);
+        /// <summary>
+        /// Returns proposal details
+        /// </summary>
+        /// <param name="id">Proposal id</param>
+        /// <param name="username">User username</param>
+        Task<ProposalDto> GetUserProposalDetailsAsync(int id, string username);
     }
 }
