@@ -25,7 +25,7 @@ namespace MoveITApp.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        public async Task<IActionResult> InitiateProposal(InitiateProposalDto initiateProposalDto)
+        public async Task<ActionResult<ProposalDto>> InitiateProposal(InitiateProposalDto initiateProposalDto)
         {
             try
             {

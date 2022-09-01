@@ -29,7 +29,7 @@ namespace MoveITApp.Services.Implementations
         }
 
         /// <inheritdoc />
-        public async Task<string> LoginUser(LoginUserDto loginDto)
+        public async Task<SuccessfulLoginDto> LoginUser(LoginUserDto loginDto)
         {
             if (string.IsNullOrEmpty(loginDto.UserName) || string.IsNullOrEmpty(loginDto.Password))
             {
@@ -61,11 +61,16 @@ namespace MoveITApp.Services.Implementations
             };
 
             SecurityToken token = jwtSecurityTokenHandler.CreateToken(securityTokenDescriptor);
-            return jwtSecurityTokenHandler.WriteToken(token);
+            return new SuccessfulLoginDto
+            {
+                Token = jwtSecurityTokenHandler.WriteToken(token),
+                FirstName = userDb.FirstName,
+                LastName = userDb.LastName
+            };
         }
 
         /// <inheritdoc />
-        public async Task RegisterUser(RegisterUserDto registerUserDto)
+        public async Task<UserDto> RegisterUser(RegisterUserDto registerUserDto)
         {
             await ValidateUser(registerUserDto);
 
@@ -73,6 +78,8 @@ namespace MoveITApp.Services.Implementations
 
             User user = registerUserDto.ToUser(hash);
             await _userRepository.AddAsync(user);
+
+            return user.ToUserDto();
         }
 
         private async Task ValidateUser(RegisterUserDto registerUserDto)

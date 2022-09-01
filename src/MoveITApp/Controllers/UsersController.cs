@@ -23,12 +23,12 @@ namespace MoveITApp.Controllers
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        public async Task<IActionResult> Register([FromBody] RegisterUserDto registerUserDto)
+        public async Task<ActionResult<UserDto>> Register([FromBody] RegisterUserDto registerUserDto)
         {
             try
             {
-                await _userService.RegisterUser(registerUserDto);
-                return StatusCode(StatusCodes.Status201Created, "User created!");
+                var user = await _userService.RegisterUser(registerUserDto);
+                return StatusCode(StatusCodes.Status201Created, user);
             }
             catch (BadDataException e)
             {
@@ -46,12 +46,12 @@ namespace MoveITApp.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        public async Task<IActionResult> LoginUser([FromBody] LoginUserDto loginDto)
+        public async Task<ActionResult<SuccessfulLoginDto>> LoginUser([FromBody] LoginUserDto loginDto)
         {
             try
             {
-                string token = await _userService.LoginUser(loginDto);
-                return Ok(token);
+                var successfulLoginDto = await _userService.LoginUser(loginDto);
+                return Ok(successfulLoginDto);
             }
             catch (BadDataException e)
             {

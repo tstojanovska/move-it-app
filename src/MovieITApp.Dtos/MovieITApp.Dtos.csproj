@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Users\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\MoveITApp.Domain\MoveITApp.Domain.csproj" />
   </ItemGroup>
 

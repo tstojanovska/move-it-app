@@ -15,5 +15,15 @@ namespace MoveITApp.Mappers
                 Password = hashedPassword
             };
         }
+        public static UserDto ToUserDto(this User user)
+        {
+            return new UserDto
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Username = user.Username,
+                Password = user.Password
+            };
+        }
     }
 }
