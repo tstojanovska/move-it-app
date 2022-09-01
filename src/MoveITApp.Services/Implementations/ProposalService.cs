@@ -30,7 +30,7 @@ namespace MoveITApp.Services.Implementations
         }
 
         /// <inheritdoc />
-        public async Task<List<ProposalDto>> GetUserProposals(string username)
+        public async Task<List<ProposalDto>> GetUserProposalsAsync(string username)
         {
             var userDb = await _userRepository.GetUserByUsernameAsync(username);
             if (userDb == null)
@@ -43,7 +43,7 @@ namespace MoveITApp.Services.Implementations
         }
 
         /// <inheritdoc />
-        public async Task<ProposalDto> InitiateProposal(InitiateProposalDto initiateProposalDto, string username)
+        public async Task<ProposalDto> InitiateProposalAsync(InitiateProposalDto initiateProposalDto, string username)
         {
             ValidateProposalInformation(initiateProposalDto);
             var userDb = await _userRepository.GetUserByUsernameAsync(username);

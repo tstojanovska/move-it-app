@@ -9,11 +9,11 @@ namespace MoveITApp.Services.Interfaces
         /// </summary>
         /// <param name="initiateProposalDto">Data needed for a proposal</param>
         /// <param name="username">Username of the user who asks for proposal</param>
-        Task<ProposalDto> InitiateProposal(InitiateProposalDto initiateProposalDto, string username);
+        Task<ProposalDto> InitiateProposalAsync(InitiateProposalDto initiateProposalDto, string username);
         /// <summary>
         /// Returns all the proposals of a user
         /// </summary>
         /// <param name="username">User username</param>
-        Task<List<ProposalDto>> GetUserProposals(string username);
+        Task<List<ProposalDto>> GetUserProposalsAsync(string username);
     }
 }

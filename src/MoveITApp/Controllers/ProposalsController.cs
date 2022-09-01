@@ -38,7 +38,7 @@ namespace MoveITApp.Controllers
                     if(string.IsNullOrEmpty(username))
                         return Unauthorized();
 
-                    var proposal = await _proposalService.InitiateProposal(initiateProposalDto, username);
+                    var proposal = await _proposalService.InitiateProposalAsync(initiateProposalDto, username);
                     return StatusCode(StatusCodes.Status201Created, proposal);
 
                 }
@@ -77,7 +77,7 @@ namespace MoveITApp.Controllers
                     if (string.IsNullOrEmpty(username))
                         return Unauthorized();
 
-                    var proposals = await _proposalService.GetUserProposals(username);
+                    var proposals = await _proposalService.GetUserProposalsAsync(username);
                     return Ok(proposals);
 
                 }

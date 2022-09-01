@@ -18,7 +18,7 @@ namespace MoveITApp.Tests
         private readonly Mock<IUserRepository> _userRepositoryMock;
         private readonly Mock<IDistanceRuleRepository> _distanceRuleRepositoryMock;
         private readonly Mock<IMovingObjectRuleRepository> _movingObjectRepositoryMock;
-        private readonly Mock<IOptions<AppSettings>> _optionsMock;
+        private readonly IOptions<AppSettings> _optionsMock;
         private readonly IProposalService _proposalService;
 
 
@@ -28,18 +28,21 @@ namespace MoveITApp.Tests
             _userRepositoryMock = new Mock<IUserRepository>();
             _distanceRuleRepositoryMock = new Mock<IDistanceRuleRepository>();
             _movingObjectRepositoryMock = new Mock<IMovingObjectRuleRepository>();
-            _optionsMock = new Mock<IOptions<AppSettings>>();
+            _optionsMock = Options.Create<AppSettings>(new AppSettings
+            {
+                ExtraCarLimit = 50
+            }); ;
 
             _proposalService = new ProposalService(_distanceRuleRepositoryMock.Object, _movingObjectRepositoryMock.Object,
-                _optionsMock.Object, _userRepositoryMock.Object, _proposalRepositoryMock.Object);
+                _optionsMock, _userRepositoryMock.Object, _proposalRepositoryMock.Object);
 
         }
 
         [Fact]
-        public void Confirm_subsidie_should_throw_exception()
+        public void Initiate_proposal_should_throw_exception()
         {
             SetupGetUserByUsernameToReturnNull();
-            Assert.ThrowsAsync<UserNotFoundException>(() => _proposalService.InitiateProposal(new InitiateProposalDto
+            Assert.ThrowsAsync<UserNotFoundException>(() => _proposalService.InitiateProposalAsync(new InitiateProposalDto
             {
                 AtticAreaVolume =10,
                 Distance = 10,
@@ -49,10 +52,59 @@ namespace MoveITApp.Tests
             VerifyGetUserByUserNameWasCalledOnce();
         }
 
+        [Fact]
+        public async Task Initiate_proposal_should_return_result()
+        {
+            SetupGetUserByUsernameToReturnUser();
+            SetupGetDistanceRule(1000, 10);
+            SetupGetObjectMovingRule(MovingObjectType.Piano,5000);
+
+            var result = await _proposalService.InitiateProposalAsync(new InitiateProposalDto
+            {
+                AtticAreaVolume = 30,
+                Distance = 10,
+                LivingAreaVolume = 20,
+                MovingObjectType = MovingObjectType.Piano
+            }, "tstojanovska");
+
+            Assert.NotNull(result);
+            Assert.Equal(7200, result.CalculatedPrice);
+
+            VerifyGetUserByUserNameWasCalledOnce();
+        }
+
 
         private void SetupGetUserByUsernameToReturnNull() => _userRepositoryMock.Setup(x =>
         x.GetUserByUsernameAsync(It.IsAny<string>()))
         .ReturnsAsync(null as User);
+        private void SetupGetUserByUsernameToReturnUser() => _userRepositoryMock.Setup(x =>
+        x.GetUserByUsernameAsync(It.IsAny<string>()))
+        .ReturnsAsync(new User
+        {
+            Id = 1,
+            FirstName = "Tanja",
+            LastName  = "Stojanovska",
+            Username = "tstojanovska",
+            Password = "Test123"
+        });
+        private void SetupGetDistanceRule(int fixedPrice, int pricePerKm) => _distanceRuleRepositoryMock.Setup(x =>
+        x.GetDistanceRuleByRangeAsync(It.IsAny<int>()))
+        .ReturnsAsync(new DistanceRule
+        {
+            FixedPrice = fixedPrice,
+            PricePerKm = pricePerKm,
+            From = 1,
+            To = 100,
+            Id =1
+        });
+        private void SetupGetObjectMovingRule(MovingObjectType movingObjectType, int fixedPrice) => _movingObjectRepositoryMock.Setup(x =>
+        x.GetMovingObjectRuleByTypeAsync(It.IsAny<MovingObjectType>()))
+        .ReturnsAsync(new MovingObjectRule
+        {
+            FixedPrice = fixedPrice,
+            MovingObjectType = movingObjectType,
+            Id = 1
+        });
         private void VerifyGetUserByUserNameWasCalledOnce() => _userRepositoryMock.Verify(x =>
         x.GetUserByUsernameAsync(It.IsAny<string>()), Times.Once);
       
