@@ -4,6 +4,8 @@ using MoveITApp;
 using MoveITApp.Shared.AppSettings;
 using System.Text;
 
+var allowAllOrigins = "allowAllOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -50,6 +52,15 @@ builder.Services.AddAuthentication(x =>
 var appSettingsConfig = builder.Configuration.GetSection("AppSettings");
 builder.Services.Configure<AppSettings>(appSettingsConfig);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(allowAllOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+                      });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -58,6 +69,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(allowAllOrigins);
 
 app.UseAuthentication();
 app.UseAuthorization();

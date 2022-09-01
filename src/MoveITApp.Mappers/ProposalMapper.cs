@@ -25,6 +25,7 @@ namespace MoveITApp.Mappers
         {
             return new ProposalDto
             {
+                Id = proposal.Id,
                 AtticAreaVolume = proposal.AtticAreaVolume,
                 CalculatedPrice = proposal.CalculatedPrice,
                 Distance = proposal.Distance,

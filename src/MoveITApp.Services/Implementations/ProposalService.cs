@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using MoveITApp.DataAccess.Interfaces;
+using MoveITApp.Domain.Models;
 using MoveITApp.Mappers;
 using MoveITApp.Services.Interfaces;
 using MoveITApp.Shared.AppSettings;
@@ -80,10 +81,9 @@ namespace MoveITApp.Services.Implementations
                 throw new BadDataException($"No rule found for distance {initiateProposalDto.Distance}");
             }
             var distancePrice = distanceRule.FixedPrice + initiateProposalDto.Distance * distanceRule.PricePerKm;
-
             var price = await CalculateVolumePrice(initiateProposalDto, distancePrice);
 
-            var proposalDto  = new ProposalDto
+            var proposal  = new Proposal
             {
                 AtticAreaVolume = initiateProposalDto.AtticAreaVolume,
                 CalculatedPrice = price,
@@ -92,9 +92,9 @@ namespace MoveITApp.Services.Implementations
                 Distance = initiateProposalDto.Distance,
                 UserId = userDb.Id
             };
-            await _proposalRepository.AddAsync(proposalDto.ToProposal());
+            await _proposalRepository.AddAsync(proposal);
 
-            return proposalDto;
+            return proposal.ToProposalDto();
         }
 
         /// <summary>

@@ -8,6 +8,10 @@ namespace MovieITApp.Dtos.Proposals
     public class ProposalDto
     {
         /// <summary>
+        /// Id 
+        /// </summary>
+        public int Id { get; set; }
+        /// <summary>
         /// Id of the user who made the proposal
         /// </summary>
         public int UserId { get; set; }
