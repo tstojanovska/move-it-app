@@ -87,14 +87,14 @@ namespace MoveITApp.Services.Implementations
 
             if (initiateProposalDto.LivingAreaVolume > 0)
             {
-                var numberOfCars = (initiateProposalDto.LivingAreaVolume % _options.Value.ExtraCarLimit) + 1;
+                var numberOfCars = (initiateProposalDto.LivingAreaVolume / _options.Value.ExtraCarLimit) + 1;
                 price += numberOfCars * distancePrice;
             }
 
             //add comment why
             if (initiateProposalDto.AtticAreaVolume > 0)
             {
-                var numberOfCars = (initiateProposalDto.AtticAreaVolume % _options.Value.ExtraCarLimit) + 1;
+                var numberOfCars = (initiateProposalDto.AtticAreaVolume / _options.Value.ExtraCarLimit) + 1;
                 price += numberOfCars * distancePrice;
             }
 
