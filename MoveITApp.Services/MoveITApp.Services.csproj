@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="XAct.Core.PCL" Version="0.0.5014" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MoveITApp.DataAccess\MoveITApp.DataAccess.csproj" />
+    <ProjectReference Include="..\MoveITApp.Mappers\MoveITApp.Mappers.csproj" />
+    <ProjectReference Include="..\MoveITApp.Shared\MoveITApp.Shared.csproj" />
+    <ProjectReference Include="..\MovieITApp.Dtos\MovieITApp.Dtos.csproj" />
+  </ItemGroup>
+
+</Project>
