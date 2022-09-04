@@ -20,7 +20,7 @@ namespace MoveITApp.Services.Implementations
         private readonly IProposalRepository _proposalRepository;
         private IOptions<AppSettings> _options;
 
-        public ProposalService(IDistanceRuleRepository distanceRuleRepository, IMovingObjectRuleRepository movingObjectRuleRepository, 
+        public ProposalService(IDistanceRuleRepository distanceRuleRepository, IMovingObjectRuleRepository movingObjectRuleRepository,
             IOptions<AppSettings> options, IUserRepository userRepository, IProposalRepository proposalRepository)
         {
             _distanceRuleRepository = distanceRuleRepository;
@@ -40,12 +40,12 @@ namespace MoveITApp.Services.Implementations
             }
 
             var proposalDb = await _proposalRepository.GetByIdAsync(id);
-            if(proposalDb == null)
+            if (proposalDb == null)
             {
                 throw new ResourceNotFoundException($"Proposal with id {id} was not found");
             }
 
-            if(proposalDb.UserId != userDb.Id)
+            if (proposalDb.UserId != userDb.Id)
             {
                 throw new InvalidUserException();
             }
@@ -76,14 +76,14 @@ namespace MoveITApp.Services.Implementations
             }
 
             var distanceRule = await _distanceRuleRepository.GetDistanceRuleByRangeAsync(initiateProposalDto.Distance);
-            if(distanceRule == null)
+            if (distanceRule == null)
             {
                 throw new BadDataException($"No rule found for distance {initiateProposalDto.Distance}");
             }
             var distancePrice = distanceRule.FixedPrice + initiateProposalDto.Distance * distanceRule.PricePerKm;
             var price = await CalculateVolumePrice(initiateProposalDto, distancePrice);
 
-            var proposal  = new Proposal
+            var proposal = new Proposal
             {
                 AtticAreaVolume = initiateProposalDto.AtticAreaVolume,
                 CalculatedPrice = price,
@@ -106,13 +106,16 @@ namespace MoveITApp.Services.Implementations
         {
             var price = 0;
 
+            // Given the table in the presentation, if both attic and living are are provided
+            // we consider that we need two cars, even if the sum of the areas is below the range
+            // for an extra car (50 m2)
             if (initiateProposalDto.LivingAreaVolume > 0)
             {
                 var numberOfCars = (initiateProposalDto.LivingAreaVolume / _options.Value.ExtraCarLimit) + 1;
                 price += numberOfCars * distancePrice;
             }
 
-            //add comment why
+
             if (initiateProposalDto.AtticAreaVolume > 0)
             {
                 var numberOfCars = (initiateProposalDto.AtticAreaVolume / _options.Value.ExtraCarLimit) + 1;
